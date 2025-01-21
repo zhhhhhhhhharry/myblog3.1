@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+文章详情
+{% endblock title %}
+
+{% block content %}
+    <!-- 显示消息 -->
+    {% if messages %}
+
+        <div id="message-container">
+            {% for message in messages %}
+                <div class="alert
+                    {% if message.tags == 'success' %}alert-success{% endif %}
+                    {% if message.tags == 'error' %}alert-danger{% endif %}
+                    text-center" id="message">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<!-- 文章详情 -->
+<div class="container">
+    <div class="row text-white">
+        <!-- 文章标题 -->
+
+        <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
+        <div class="col-12 alert alert-info d-flex justify-content-between align-items-center">
+            <div>
+              <a href="{% url 'userprofile:user_profile' article.author.id %}" class="btn btn-warning btn-sm">作者: {{ article.author }}</a>
+                <strong>创建时间：</strong> {{ article.created|date:'Y-m-d H:i:s' }}
+            </div>
+            <div>
+                <!-- 只有作者可以修改文章 -->
+                {% if user == article.author %}
+                    <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal">删除文章</a>
+                    <a href="{% url 'article:article_update' article.id %}" class="btn btn-warning btn-sm">编辑文章</a>
+                {% endif %}
+                <small class="text-muted">
+                    <i class="bi bi-eye"></i> {{ article.total_views }} 次阅读
+                </small>
+            </div>
+        </div>
+
+        <!-- 文章正文 -->
+        <div class=" col-12 alert alert-info justify-content-between align-items-center">
+            <p>{{ article.body|safe }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- 评论区域 -->
+<div class="container">
+    <div class="col-12 text-white">
+        <hr>
+        <!-- 发表评论 -->
+        {% if user.is_authenticated %}
+        <div>
+            <form action="{% url 'comment:post_comment' article.id %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="body">
+                        <strong>我也要发言：</strong>
+                    </label>
+                    <textarea class="form-control" id="body" name="body" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">发表评论</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="alert alert-warning mt-3">
+            请 <a href="{% url 'userprofile:login' %}">登录</a> 后发表评论
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 显示评论 -->
+<div class="container mt-4 text-white">
+    <h5>共有 {{ comments.count }} 条评论</h5>
+    <div class=" alert alert-info  justify-content-between align-items-center">
+        {% for comment in comments %}
+        <hr>
+        <p>
+            <span class="bi bi-person" style="color: blue">{{ comment.user }}</span>
+            于 <span style="color: green">{{ comment.created|date:"Y-m-d H:i:s" }}</span> 时说：
+        </p>
+        <pre>{{ comment.body }}</pre>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- 删除文章确认模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">确认删除</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                您确认删除这篇文章吗？此操作不可恢复。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="confirm_delete()">确认删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="py-1 bg-dark fixed-bottom">
+    <div class="container">
+        <p class="m-0 text-center text-white">{{ article.title }}</p>
+    </div>
+</footer>
+<script>
+    {% if messages %}
+      $('#message-container .alert').fadeIn(500).delay(5000).fadeOut(500);  // 显示和隐藏消息
+    {% endif %}
+
+    function confirm_delete() {
+        location.href = '{% url "article:article_delete" article.id %}';
+    }
+
+    </script>
+
+{% endblock content %}
+

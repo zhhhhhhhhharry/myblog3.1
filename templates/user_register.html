@@ -1,0 +1,86 @@
+{% extends "base.html" %} {% load static %}
+{% block title %} 注册 {% endblock title %}
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+      {% if messages %}
+        <div class="alert alert-danger text-center" id="error-message">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+     <div class="card-header text-center bg-primary text-white">
+          <h4>欢迎来到SimpleBlog!</h4>
+        </div>
+        <div class="card shadow-sm">
+        <div class="card-body">
+            <br>
+            <form method="post" action=".">
+                {% csrf_token %}
+                <div><style>body{margin-top: 80px;}</style></div>
+                <!-- 账号 -->
+                <div class="form-group">
+                    <label for="username">昵称</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <!-- 邮箱 -->
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email">
+                </div>
+                <!-- 密码 -->
+                <div class="form-group">
+                    <label for="password">设置密码</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <!-- 确认密码 -->
+                <div class="form-group">
+                    <label for="password2">确认密码</label>
+                    <input type="password" class="form-control" id="password2" name="password2" required>
+                </div>
+                <!-- 提交按钮 -->
+                <button type="submit" class="btn btn-primary btn-block">提交</button>
+            </form>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+<footer class="py-1 bg-dark fixed-bottom">
+    <div class="container">
+        <p class="m-0 text-center text-white">注册</p>
+    </div>
+</footer>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function() {
+    // 错误和成功消息的动态效果
+    $('#message-container .alert').fadeIn(500).delay(5000).fadeOut(500);  // 显示和隐藏消息
+
+    // 输入框聚焦时改变边框颜色
+    $('#username, #password').on('focus', function() {
+      $(this).css('border-color', '#007bff');  // 聚焦时边框颜色
+    }).on('blur', function() {
+      $(this).css('border-color', '#ced4da');  // 失去焦点时恢复默认颜色
+    });
+
+    // 提交按钮点击时的动画效果
+    $('#submit-btn').on('click', function() {
+      var button = $(this);
+      button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> 正在登录...');
+      setTimeout(function() {
+        button.prop('disabled', false).html('登录');
+      }, 2000);  // 2秒后恢复按钮状态
+    });
+
+    // 表单的滑入动画效果
+    $('#login-form').hide().fadeIn(1000);  // 页面加载时表单滑入效果
+  });
+</script>
+{% endblock extra_js %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 登录 {% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <br>
+      <!-- 显示错误消息 -->
+      {% if messages %}
+        <div class="alert alert-danger text-center" id="error-message">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- 登录表单 -->
+      <div class="card shadow-sm" id="login-form">
+        <div class="card-header text-center bg-primary text-white">
+          <h4>欢迎回来！请登录</h4>
+        </div>
+
+        <div class="card-body">
+          <form method="post" action=".">
+            {% csrf_token %}
+            <!-- 账号 -->
+            <div class="form-group">
+              <label for="username">账号</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+
+            <!-- 密码 -->
+            <div class="form-group">
+              <label for="password">密码</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <!-- 提交按钮 -->
+            <button type="submit" class="btn btn-primary btn-block" id="submit-btn">登录</button>
+          </form>
+        </div>
+        <div class="card-footer text-center">
+          <p class="mb-0">还没有账号？ <a href='{% url "userprofile:register" %}'>注册账号</a> 加入我们吧！</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="py-1 bg-dark fixed-bottom">
+    <div class="container">
+        <p class="m-0 text-center text-white">登录</p>
+    </div>
+</footer>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function() {
+    // 错误消息的动态效果
+    {% if messages %}
+      $('#error-message').fadeIn(500).delay(5000).fadeOut(500);  // 显示和隐藏错误消息
+    {% endif %}
+
+    // 输入框聚焦时改变边框颜色
+    $('#username, #password').on('focus', function() {
+      $(this).css('border-color', '#007bff');  // 聚焦时边框颜色
+    }).on('blur', function() {
+      $(this).css('border-color', '#ced4da');  // 失去焦点时恢复默认颜色
+    });
+
+    // 提交按钮点击时的动画效果
+    $('#submit-btn').on('click', function() {
+      var button = $(this);
+      button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> 正在登录...');
+      setTimeout(function() {
+        button.prop('disabled', false).html('登录');
+      }, 2000);  // 2秒后恢复按钮状态
+    });
+
+    // 表单的滑入动画效果
+    $('#login-form').hide().fadeIn(1000);  // 页面加载时表单滑入效果
+  });
+</script>
+{% endblock extra_js %}
+
+

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}SimpleBlog{% endblock %}
+
+
+
+
+{% block content %}
+{% if messages %}
+  <div id="message-box" class="alert-container">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+<!-- 文章列表 -->
+<style>
+    body{
+    margin-top: 100px;
+    }
+</style>
+
+
+        <p class="card-header text-center bg-primary text-white">文章列表</p>
+
+
+<div class="container mt-3">
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                 <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary btn-sm">阅读本文</a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.body|slice:'100'|safe }}...</p>
+
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-between">
+
+                    <small><i class="bi bi-eye"></i> 浏览量{{ article.total_views }}</small>
+                    <small>{{ article.created_at|date:"Y-m-d" }}</small>  <!-- 显示发布时间 -->
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-between">
+                    <small><i class="bi bi-eye"></i>评论数 {{ article.comment_count }}</small>
+                    <small>{{ article.created|date:"Y-m-d" }}</small>  <!-- 显示发布时间 -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- 分页 -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if articles.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1&order={{ order }}">&laquo;&laquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ articles.previous_page_number }}&order={{ order }}">&laquo;</a></li>
+                {% endif %}
+
+                <li class="page-item disabled"><span class="page-link">{{ articles.number }}</span></li>
+
+                {% if articles.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ articles.next_page_number }}&order={{ order }}">&raquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ articles.paginator.num_pages }}&order={{ order }}">&raquo;&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+<footer class="py-1 bg-dark fixed-bottom">
+    <div class="container">
+        <p class="m-0 text-center text-white">首页</p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function() {
+    document.addEventListener("DOMContentLoaded", function() {
+    const messageBox = document.getElementById('message-box');
+
+    // 显示消息框并设置消失时间
+    if (messageBox && messageBox.children.length > 0) {
+      messageBox.style.display = 'block';
+
+      setTimeout(function() {
+        messageBox.style.display = 'none';
+      }, 3000);  // 3秒后自动消失
+    }
+  });
+
+    // 输入框聚焦时改变边框颜色
+    $('#username, #password').on('focus', function() {
+      $(this).css('border-color', '#007bff');  // 聚焦时边框颜色
+    }).on('blur', function() {
+      $(this).css('border-color', '#ced4da');  // 失去焦点时恢复默认颜色
+    });
+
+    // 提交按钮点击时的动画效果
+    $('#submit-btn').on('click', function() {
+      var button = $(this);
+      button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> 正在登录...');
+      setTimeout(function() {
+        button.prop('disabled', false).html('登录');
+      }, 2000);  // 2秒后恢复按钮状态
+    });
+
+    // 表单的滑入动画效果
+    $('#login-form').hide().fadeIn(1000);  // 页面加载时表单滑入效果
+  });
+</script>
+{% endblock extra_js %}
+
+
+
+

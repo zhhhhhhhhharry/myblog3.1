@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% load static %}
+{% block title %} 注册 {% endblock title %}
+{% block content %}
+<style>
+    body{
+    margin-top: 100px;
+    }
+</style>
+    <h1 class="text-white">个人信息</h1>
+
+    <p class="text-white"> <strong>用户名:</strong> {{ user.username }}</p>
+    <p class="text-white"><strong>邮箱:</strong> {{ user.email }}</p>
+    <p class="text-white"><strong>注册时间:</strong> {{ user.date_joined|date:"Y-m-d H:i:s" }}</p>
+
+<footer class="py-1 bg-dark fixed-bottom">
+    <div class="container">
+        <p class="m-0 text-center text-white">{{ user.username }}的个人信息</p>
+    </div>
+</footer>
+{% endblock content %}

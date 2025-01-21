@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}网站标题{% endblock %}</title>
+
+    <!-- 引入 Bootstrap 样式 -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- 引入 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">
+
+    <!-- 页面主题颜色设置 -->
+    <style>
+        body {
+            margin-top: 50px;
+            background-image: url('{% static "background.jpg" %}'); /* 背景图片路径 */
+            background-size: cover;  /* 背景图片覆盖整个页面 */
+            background-position: center; /* 背景图片居中 */
+            background-attachment: fixed;  /* 背景固定 */
+            font-family: 'Arial', sans-serif;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .navbar {
+            background-color: #FFFFFF;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .navbar a {
+            color: yellow;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #f8f9fa;
+        }
+
+        /* 导航栏背景色变换效果 */
+        .navbar.scroll-active {
+            background: rgba(19, 19, 70, 0.8); /* 设置透明背景，增加透明度 */
+        }
+
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer:hover {
+            opacity: 1;
+        }
+
+        .container {
+            margin-top: 0px;
+            word-wrap: break-word;
+        {
+        /* 卡片样式 */
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card img {
+            border-radius: 15px 15px 0 0;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+        .text-white {
+            color: white;
+        }
+        /* 动态加载效果 */
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 引入导航栏 -->
+    {% include 'header.html' %}
+
+    <div class="container fade-in">
+        <!-- 预留具体页面的内容位置 -->
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- 引入注脚 -->
+    {% include 'footer.html' %}
+
+    <!-- 引入 jQuery 和 Bootstrap JS -->
+    <script src="https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <script>
+        // 滚动时导航栏背景色变化
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('.navbar').addClass('scroll-active');
+            } else {
+                $('.navbar').removeClass('scroll-active');
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
